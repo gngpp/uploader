@@ -7,9 +7,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author mac
  */
 @SpringBootApplication
-public class MyUploaderApplication {
+public class UploaderApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(MyUploaderApplication.class, args);
+        SpringApplication.run(UploaderApplication.class, args);
     }
 }

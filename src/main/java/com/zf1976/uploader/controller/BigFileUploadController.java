@@ -24,17 +24,8 @@ public class BigFileUploadController {
         this.fileService = fileService;
     }
 
-    @PostMapping("/")
-    public void upload(String name,
-                       String md5,
-                       Long size,
-                       Integer chunks,
-                       Integer chunk,
-                       MultipartFile file) throws IOException {
-        if (chunks != null && chunks != 0) {
-            fileService.uploadWithBlock(name, md5,size,chunks,chunk,file);
-        } else {
-            fileService.upload(name, md5,file);
-        }
+    @PostMapping()
+    public void upload(String name, String md5, Long size, Integer chunks, Integer chunk, MultipartFile file) throws IOException {
+        fileService.uploadWithChunk(name, md5,size,chunks,chunk,file);
     }
 }
