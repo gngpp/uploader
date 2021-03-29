@@ -1,10 +1,10 @@
-package com.zf1976.myuploader.service;
+package com.zf1976.uploader.service;
 
-import com.zf1976.myuploader.config.UploadConfig;
-import com.zf1976.myuploader.dao.FileDao;
-import com.zf1976.myuploader.model.File;
-import com.zf1976.myuploader.utils.FileUtils;
-import com.zf1976.myuploader.utils.UploadUtils;
+import com.zf1976.uploader.config.UploadConfig;
+import com.zf1976.uploader.dao.FileDao;
+import com.zf1976.uploader.model.File;
+import com.zf1976.uploader.utils.FileUtils;
+import com.zf1976.uploader.utils.UploadUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.ObjectUtils;

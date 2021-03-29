@@ -1,4 +1,4 @@
-package com.zf1976.myuploader.config;
+package com.zf1976.uploader.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;

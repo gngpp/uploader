@@ -1,4 +1,4 @@
-package com.zf1976.myuploader.model;
+package com.zf1976.uploader.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

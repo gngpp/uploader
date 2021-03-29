@@ -1,9 +1,9 @@
-package com.zf1976.myuploader.utils;
+package com.zf1976.uploader.utils;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.zf1976.myuploader.utils.FileUtils.generateFileName;
+import static com.zf1976.uploader.utils.FileUtils.generateFileName;
 
 /**
  * 分块上传工具类

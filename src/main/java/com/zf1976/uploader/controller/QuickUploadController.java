@@ -1,6 +1,6 @@
-package com.zf1976.myuploader.controller;
+package com.zf1976.uploader.controller;
 
-import com.zf1976.myuploader.service.FileService;
+import com.zf1976.uploader.service.FileService;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

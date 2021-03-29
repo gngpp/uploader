@@ -1,7 +1,7 @@
-package com.zf1976.myuploader.utils;
+package com.zf1976.uploader.utils;
 
 
-import com.zf1976.myuploader.config.UploadConfig;
+import com.zf1976.uploader.config.UploadConfig;
 import org.springframework.util.AlternativeJdkIdGenerator;
 import org.springframework.util.Assert;
 

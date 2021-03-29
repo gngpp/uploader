@@ -1,6 +1,7 @@
 package com.zf1976.myuploader.dao;
 
-import com.zf1976.myuploader.model.File;
+import com.zf1976.uploader.dao.FileDao;
+import com.zf1976.uploader.model.File;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

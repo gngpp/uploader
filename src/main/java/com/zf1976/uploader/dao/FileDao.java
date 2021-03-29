@@ -1,6 +1,6 @@
-package com.zf1976.myuploader.dao;
+package com.zf1976.uploader.dao;
 
-import com.zf1976.myuploader.model.File;
+import com.zf1976.uploader.model.File;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper

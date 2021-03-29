@@ -1,10 +1,11 @@
-package com.zf1976.myuploader.controller;
+package com.zf1976.uploader.controller;
 
+import com.zf1976.uploader.utils.LogUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.zf1976.myuploader.utils.LogUtils.logToFile;
+import static com.zf1976.uploader.utils.LogUtils.logToFile;
 
 /**
  * 测试日志功能
@@ -32,7 +33,7 @@ public class TestExceptionController {
         try {
             System.out.println(1/0);
         } catch (Exception e) {
-            logToFile(e);
+            LogUtils.logToFile(e);
         }
     }
 }

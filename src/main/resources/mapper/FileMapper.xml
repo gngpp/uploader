@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.zf1976.myuploader.dao.FileDao">
-    <resultMap id="BaseResultMap" type="com.zf1976.myuploader.model.File">
+    <resultMap id="BaseResultMap" type="com.zf1976.uploader.model.File">
         <id column="id" property="id" />
         <result column="name" property="name" />
         <result column="md5" property="md5" />
@@ -21,11 +21,11 @@
         where id = #{id}
     </select>
 
-    <insert id="save" parameterType="com.zf1976.myuploader.model.File" keyProperty="id" useGeneratedKeys="true">
+    <insert id="save" parameterType="com.zf1976.uploader.model.File" keyProperty="id" useGeneratedKeys="true">
         insert into file(name,md5,path,upload_time) values(#{name},#{md5},#{path},#{uploadTime})
     </insert>
 
-    <update id="update" parameterType="com.zf1976.myuploader.model.File" >
+    <update id="update" parameterType="com.zf1976.uploader.model.File" >
         <if test="id != null">
             update file
             <set>
@@ -50,7 +50,7 @@
         delete from file where id = #{id}
     </delete>
 
-    <select id="getByFile" parameterType="com.zf1976.myuploader.model.File" resultMap="BaseResultMap">
+    <select id="getByFile" parameterType="com.zf1976.uploader.model.File" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
         from file
