@@ -23,7 +23,7 @@ public class UploadUtils {
         }
     }
 
-    private static Map<String, Value> chunkMap = new HashMap<>();
+    private static final Map<String, Value> CHUNK_MAP = new HashMap<>();
 
     /**
      * 判断文件所有分块是否已上传
@@ -32,7 +32,7 @@ public class UploadUtils {
      */
     public static boolean isUploaded(String key) {
         if (isExist(key)) {
-            for (boolean b : chunkMap.get(key).status) {
+            for (boolean b : CHUNK_MAP.get(key).status) {
                 if (!b) {
                     return false;
                 }
@@ -48,7 +48,7 @@ public class UploadUtils {
      * @return
      */
     private static boolean isExist(String key) {
-        return chunkMap.containsKey(key);
+        return CHUNK_MAP.containsKey(key);
     }
 
     /**
@@ -57,7 +57,7 @@ public class UploadUtils {
      * @param chunk
      */
     public static void addChunk(String key, int chunk) {
-        chunkMap.get(key).status[chunk] = true;
+        CHUNK_MAP.get(key).status[chunk] = true;
     }
 
     /**
@@ -66,7 +66,7 @@ public class UploadUtils {
      */
     public static void removeKey(String key) {
         if (isExist(key)) {
-            chunkMap.remove(key);
+            CHUNK_MAP.remove(key);
         }
     }
 
@@ -80,10 +80,10 @@ public class UploadUtils {
         if (!isExist(key)) {
             synchronized (UploadUtils.class) {
                 if (!isExist(key)) {
-                    chunkMap.put(key, new Value(chunks));
+                    CHUNK_MAP.put(key, new Value(chunks));
                 }
             }
         }
-        return chunkMap.get(key).name;
+        return CHUNK_MAP.get(key).name;
     }
 }

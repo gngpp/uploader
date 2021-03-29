@@ -72,8 +72,8 @@ public class FileService {
 
     /**
      * 分块上传文件
-     * @param md5
-     * @param size
+     * @param md5 文件md5
+     * @param size 文件大小
      * @param chunks
      * @param chunk
      * @param file
