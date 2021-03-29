@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    username: root
+    password: itcast
+    url: jdbc:mysql://localhost:3306/myupload?useUnicode=true&characterEncoding=utf-8&serverTimeZone=UTC&useSSL=false
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+mybatis:
+  mapper-locations: classpath:mapper/*Mapper.xml
+  type-aliases-package: cn.attackme.myuploader.model
+# 默认在～/upload
+upload:
+  catalog: /upload
