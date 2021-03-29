@@ -1,6 +1,7 @@
 package com.zf1976.myuploader.utils;
 
 
+import com.zf1976.myuploader.config.UploadConfig;
 import org.springframework.util.AlternativeJdkIdGenerator;
 import org.springframework.util.Assert;
 
@@ -8,13 +9,17 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.UUID;
 
 /**
  * 文件操作工具类
  * @author mac
  */
 public class FileUtils {
+
+    private static final String ROOT_PATH = System.getProperty("user.home");
+    public static String getUploadPath(){
+        return ROOT_PATH + UploadConfig.catalog;
+    }
 
     /**
      * 更好的uuid生成工具
@@ -39,10 +44,10 @@ public class FileUtils {
         try (OutputStream fileOutputStream = new FileOutputStream(file);
              BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream)) {
             // 无脑16k
-            byte[] buf = new byte[16*1024];
+            byte[] data = new byte[16*1024];
             int len;
-            while (-1 != (len = inputStream.read(buf))) {
-                bufferedOutputStream.write(buf,0,len);
+            while ((len = inputStream.read(data)) != -1) {
+                bufferedOutputStream.write(data,0, len);
             }
         }
     }

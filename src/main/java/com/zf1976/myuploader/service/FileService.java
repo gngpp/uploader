@@ -6,6 +6,8 @@ import com.zf1976.myuploader.model.File;
 import com.zf1976.myuploader.utils.FileUtils;
 import com.zf1976.myuploader.utils.UploadUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.DigestUtils;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -22,7 +24,6 @@ import java.util.Date;
 public class FileService {
 
     private final FileDao fileDao;
-    private final String rootPath = System.getProperty("user.home");
 
     public FileService(FileDao fileDao) {
         this.fileDao = fileDao;
@@ -33,9 +34,8 @@ public class FileService {
      * 创建上传目录
      */
     private void initUploadDirectory(){
-        String uploadPath = getUploadPath();
         try {
-            Path path = Paths.get(uploadPath);
+            Path path = Paths.get(FileUtils.getUploadPath());
             java.io.File rootDirectory;
             if (!path.toFile().exists()) {
                  rootDirectory = Files.createDirectory(path).toFile();
@@ -49,16 +49,25 @@ public class FileService {
     }
 
     /**
-     * 上传文件
+     * 上传文件 md5 校验防止重复上传文件
+     *
      * @param md5 文件md5
      * @param file 上传文件
      */
-    public void upload(String name,
-                       String md5,
-                       MultipartFile file) throws IOException {
-        String uploadPath = this.getUploadPath();
-        FileUtils.write(this.getUploadPath(), name, file.getInputStream());
-        fileDao.save(new File(name, md5, uploadPath, new Date()));
+    public void upload(String name, String md5, MultipartFile file) throws IOException {
+        String uploadPath = FileUtils.getUploadPath();
+        String md5DigestAsHex;
+        if (ObjectUtils.isEmpty(md5)) {
+            md5DigestAsHex = DigestUtils.md5DigestAsHex(file.getInputStream());
+        } else {
+            md5DigestAsHex = md5;
+        }
+        if (!checkMd5(md5DigestAsHex)) {
+            throw new RuntimeException("file:" + name + " is exists");
+        } else {
+            FileUtils.write(uploadPath, file.getOriginalFilename(), file.getInputStream());
+            fileDao.save(new File(name, md5DigestAsHex, uploadPath, new Date()));
+        }
     }
 
     /**
@@ -96,7 +105,4 @@ public class FileService {
         return fileDao.getByFile(file) == null;
     }
 
-    public String getUploadPath(){
-        return this.rootPath + UploadConfig.catalog;
-    }
 }
