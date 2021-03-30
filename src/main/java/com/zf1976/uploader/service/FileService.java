@@ -61,12 +61,13 @@ public class FileService {
     @Transactional(rollbackFor = Exception.class)
     public Optional<Void> uploadFile(String filename, String md5, MultipartFile file) throws IOException {
         // 生成文件md5防止重复上传
-        String md5DigestAsHex = ObjectUtils.isEmpty(md5) ? DigestUtils.md5DigestAsHex(file.getInputStream()) : md5;
+        String md5Filename = ObjectUtils.isEmpty(md5) ? DigestUtils.md5DigestAsHex(file.getInputStream()) : md5;
         // 根据文件md5校验文件是否已上传
-        if (!checkMd5(md5DigestAsHex)) {
+        if (!checkMd5(md5Filename)) {
             throw new RuntimeException("file:" + filename + " is exists");
         } else {
-            FileUtil.write(file.getOriginalFilename(), file.getInputStream());
+            // 文件md5作为文件名
+            FileUtil.write(md5Filename, file.getInputStream());
             final File buildFile = new File();
             buildFile.setMd5(md5)
                      .setName(filename)
@@ -77,12 +78,22 @@ public class FileService {
         return Optional.empty();
     }
 
+    /**
+     * 多文件上传
+     *
+     * @date 2021-03-30 20:35:18
+     * @param fileList 文件数组
+     * @return {@link Optional<Void>}
+     */
     @Transactional(rollbackFor = Exception.class)
     public Optional<Void> uploadFileList(MultipartFile[] fileList) {
         for (MultipartFile file : fileList) {
+            // 获取文件名
             String filename = file.getOriginalFilename();
             try (InputStream inputStream = file.getInputStream()) {
+                // 文件进行md5记录
                 final String md5DigestAsHex = DigestUtils.md5DigestAsHex(inputStream);
+                //上传写入文件
                 return this.uploadFile(filename, md5DigestAsHex, file);
             } catch (IOException ioException) {
                 throw new RuntimeException();
@@ -116,8 +127,8 @@ public class FileService {
                                                           .chunkIndex(chunkIndex)
                                                           .chunkTotal(chunkTotal)
                                                           .build();
-        // 写入文件块
-        if (FileUtil.writeWithChunk(filename, chunkFile, file.getInputStream())) {
+        // 写入文件块, 文件md5作为写入文件名
+        if (FileUtil.writeWithChunk(md5, chunkFile, file.getInputStream())) {
             // 记录文件块
             ChunkRecordUtil.add(md5, chunkIndex);
         }
@@ -141,7 +152,8 @@ public class FileService {
      * @return boolean
      */
     public boolean checkMd5(String md5) {
-        final File file = new File(null, null, md5, null,null);
+        File file = new File();
+        file.setMd5(md5);
         return fileDao.getByFile(file) == null;
     }
 

@@ -2,12 +2,31 @@ package com.zf1976.uploader.dao;
 
 import com.zf1976.uploader.model.File;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.Collection;
 
 /**
  * @author mac
  */
 @Mapper
 public interface FileDao {
+
+    /**
+     * 分页查询
+     *
+     * @param pageNumber 页数
+     * @param pageSize 页大小
+     * @return file list
+     */
+    Collection<File> selectPages(@Param("pageNumber") Integer pageNumber,@Param("pageSize") Integer pageSize);
+
+    /**
+     * 查询所有文件数据
+     *
+     * @return file list
+     */
+    Collection<File> selectAll();
     /**
      * 通过主键获取一行数据
      * @param id 文件id

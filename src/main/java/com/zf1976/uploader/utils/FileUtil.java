@@ -108,7 +108,7 @@ public class FileUtil {
     }
 
     /**
-     * 功能描述
+     * 文件创建
      *
      * @date 2021-03-29 23:36:55
      * @param file 文件

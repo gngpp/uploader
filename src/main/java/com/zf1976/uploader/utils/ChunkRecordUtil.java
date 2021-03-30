@@ -80,7 +80,6 @@ public class ChunkRecordUtil {
     private static class Record {
         // 块记录值
         boolean[] complete;
-
         Record(int n) {
             this.complete = new boolean[n];
         }

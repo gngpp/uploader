@@ -80,4 +80,16 @@
             </if>
         </where>
     </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select id, name, md5, upload_time, size
+        from file;
+    </select>
+
+    <select id="selectPages" resultMap="BaseResultMap">
+        select id,name,md5,upload_time,size
+        from file
+        limit #{pageNumber}
+        
+    </select>
 </mapper>
