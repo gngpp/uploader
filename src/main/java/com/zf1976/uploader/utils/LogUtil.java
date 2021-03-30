@@ -8,9 +8,10 @@ import java.util.Date;
 
 /**
  * 日志工具类
+ * @author mac
  */
 @Slf4j
-public class LogUtils {
+public class LogUtil {
 
     /**
      * 日志输出到文件

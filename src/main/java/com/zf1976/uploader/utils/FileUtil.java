@@ -15,7 +15,7 @@ import java.nio.file.Paths;
  * 文件操作工具类
  * @author mac
  */
-public class FileUtils {
+public class FileUtil {
 
     /**
      * 用户目录
