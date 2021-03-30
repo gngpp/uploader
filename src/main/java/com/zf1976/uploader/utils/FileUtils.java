@@ -35,8 +35,7 @@ public class FileUtils {
      * @throws IOException exception
      */
     public static void write(String fileName, InputStream fileInputStream) throws IOException {
-        String uploadPath = getUploadPath();
-        Path path = Paths.get(uploadPath, fileName);
+        Path path = Paths.get(getUploadPath(), fileName);
         File file = null;
         if (!Files.exists(path)) {
             file = Files.createFile(path).toFile();
