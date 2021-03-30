@@ -31,10 +31,10 @@ public class FileUtils {
      * 写入文件
      *
      * @param fileName 文件
-     * @param chunkInputStream 文件流
+     * @param fileInputStream 文件流
      * @throws IOException exception
      */
-    public static void write(String fileName, InputStream chunkInputStream) throws IOException {
+    public static void write(String fileName, InputStream fileInputStream) throws IOException {
         String uploadPath = getUploadPath();
         Path path = Paths.get(uploadPath, fileName);
         File file = null;
@@ -47,7 +47,7 @@ public class FileUtils {
             // 无脑16k
             byte[] data = new byte[16*1024];
             int len;
-            while ((len = chunkInputStream.read(data)) != -1) {
+            while ((len = fileInputStream.read(data)) != -1) {
                 bufferedOutputStream.write(data,0, len);
             }
         }
