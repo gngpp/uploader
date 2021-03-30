@@ -29,8 +29,8 @@ public class UploadController {
     }
 
     @PostMapping("/file")
-    public ResponseEntity<Optional<Void>> upload(String name, String md5, @RequestParam("file") MultipartFile file) throws IOException {
-        return ResponseEntity.ok(fileService.uploadFile(name, md5, file));
+    public ResponseEntity<Optional<Void>> upload(String md5, @RequestParam("file") MultipartFile file) throws IOException {
+        return ResponseEntity.ok(fileService.uploadFile(md5, file));
     }
 
     @PostMapping("/big_file")

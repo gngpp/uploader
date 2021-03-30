@@ -18,7 +18,8 @@ public class MyUploaderApplicationTests {
 
     @Test
     public void contextLoads() {
-
+        String filename = "hanbi.jpg";
+        System.out.println(filename.substring(filename.indexOf(".")));
     }
 
 }

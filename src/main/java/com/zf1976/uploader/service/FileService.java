@@ -1,12 +1,14 @@
 package com.zf1976.uploader.service;
 
 import com.zf1976.uploader.dao.FileDao;
+import com.zf1976.uploader.dao.PageInfo;
 import com.zf1976.uploader.model.ChunkFile;
 import com.zf1976.uploader.model.File;
 import com.zf1976.uploader.utils.FileUtil;
 import com.zf1976.uploader.utils.ChunkRecordUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,6 +18,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Optional;
 
@@ -59,18 +62,20 @@ public class FileService {
      * @param file 上传文件
      */
     @Transactional(rollbackFor = Exception.class)
-    public Optional<Void> uploadFile(String filename, String md5, MultipartFile file) throws IOException {
+    public Optional<Void> uploadFile(String md5, MultipartFile file) throws IOException {
         // 生成文件md5防止重复上传
+        final String rawFilename = file.getOriginalFilename();
         String md5Filename = ObjectUtils.isEmpty(md5) ? DigestUtils.md5DigestAsHex(file.getInputStream()) : md5;
         // 根据文件md5校验文件是否已上传
         if (!checkMd5(md5Filename)) {
-            throw new RuntimeException("file:" + filename + " is exists");
+            throw new RuntimeException("file:" + rawFilename + " is exists");
         } else {
             // 文件md5作为文件名
-            FileUtil.write(md5Filename, file.getInputStream());
+            final String generatedMd5Filename = generatedMd5Filename(rawFilename, md5Filename);
+            FileUtil.write(generatedMd5Filename, file.getInputStream());
             final File buildFile = new File();
             buildFile.setMd5(md5)
-                     .setName(filename)
+                     .setName(rawFilename)
                      .setSize(formatByte(file.getSize()))
                      .setUploadTime(new Date());
             fileDao.save(buildFile);
@@ -88,13 +93,11 @@ public class FileService {
     @Transactional(rollbackFor = Exception.class)
     public Optional<Void> uploadFileList(MultipartFile[] fileList) {
         for (MultipartFile file : fileList) {
-            // 获取文件名
-            String filename = file.getOriginalFilename();
             try (InputStream inputStream = file.getInputStream()) {
                 // 文件进行md5记录
                 final String md5DigestAsHex = DigestUtils.md5DigestAsHex(inputStream);
                 //上传写入文件
-                return this.uploadFile(filename, md5DigestAsHex, file);
+                return this.uploadFile(md5DigestAsHex, file);
             } catch (IOException ioException) {
                 throw new RuntimeException();
             }
@@ -115,7 +118,7 @@ public class FileService {
     public Optional<Void> uploadWithChunk(String filename, String md5, Long fileSize, Integer chunkTotal, Integer chunkIndex, MultipartFile file) throws IOException {
         // 文件小于限制直接上传
         if (ObjectUtils.isEmpty(chunkTotal)) {
-            uploadFile(filename, md5, file);
+            uploadFile(md5, file);
         }
         // 设置文件分块记录
         if (!ChunkRecordUtil.checkRecord(md5)) {
@@ -127,8 +130,9 @@ public class FileService {
                                                           .chunkIndex(chunkIndex)
                                                           .chunkTotal(chunkTotal)
                                                           .build();
-        // 写入文件块, 文件md5作为写入文件名
-        if (FileUtil.writeWithChunk(md5, chunkFile, file.getInputStream())) {
+        // 写入文件块，md5作为文件名
+        final String generatedMd5Filename = generatedMd5Filename(filename, md5);
+        if (FileUtil.writeWithChunk(generatedMd5Filename, chunkFile, file.getInputStream())) {
             // 记录文件块
             ChunkRecordUtil.add(md5, chunkIndex);
         }
@@ -158,6 +162,23 @@ public class FileService {
     }
 
     /**
+     * 分页查询上传文件
+     *
+     * @param pageNumber 页数
+     * @param pageSize 页大小
+     * @return page info
+     */
+    PageInfo<Collection<File>> selectFilePage(Integer pageNumber, Integer pageSize) {
+        // 页数
+        int page = (pageNumber - 1) * pageSize;
+        final Collection<File> fileCollection = this.fileDao.selectPages(page, pageSize);
+        final PageInfo<Collection<File>> pageInfo = new PageInfo<>();
+        pageInfo.setPageSize(pageSize)
+                .setData(fileCollection);
+        return pageInfo;
+    }
+
+    /**
      * 格式化
      *
      * @param size 文件大小
@@ -178,6 +199,18 @@ public class FileService {
             stringBuilder.append("MB");
         }
         return stringBuilder.toString();
+    }
+
+    /**
+     * 生成新文件名
+     *
+     * @param rawFilename 源
+     * @param md5 文件md5
+     * @return filename
+     */
+    public static String generatedMd5Filename(String rawFilename, String md5) {
+        Assert.notNull(rawFilename,"origin filename cannot been null");
+        return md5 + rawFilename.substring(rawFilename.indexOf("."));
     }
 
 }
