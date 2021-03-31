@@ -92,4 +92,8 @@
         limit #{pageNumber}
         
     </select>
+
+    <select id="selectTotalRecord" resultType="java.lang.Integer">
+        select count(id) from file
+    </select>
 </mapper>

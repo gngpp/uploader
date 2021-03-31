@@ -97,7 +97,7 @@ public class FileService {
                 // 文件进行md5记录
                 final String md5DigestAsHex = DigestUtils.md5DigestAsHex(inputStream);
                 //上传写入文件
-                return this.uploadFile(md5DigestAsHex, file);
+                this.uploadFile(md5DigestAsHex, file);
             } catch (IOException ioException) {
                 throw new RuntimeException();
             }
@@ -171,8 +171,11 @@ public class FileService {
      * @return page info
      */
     PageInfo<Collection<File>> selectFilePage(Integer pageNumber, Integer pageSize) {
+        final Integer totalRecord = this.fileDao.selectTotalRecord();
         // 页数
         int page = (pageNumber - 1) * pageSize;
+        // 总页数
+        int pageCount = (totalRecord + pageSize -1) / pageSize;
         final Collection<File> fileCollection = this.fileDao.selectPages(page, pageSize);
         final PageInfo<Collection<File>> pageInfo = new PageInfo<>();
         pageInfo.setPageSize(pageSize)

@@ -22,6 +22,13 @@ public interface FileDao {
     Collection<File> selectPages(@Param("pageNumber") Integer pageNumber,@Param("pageSize") Integer pageSize);
 
     /**
+     * 查上传文件总数
+     *
+     * @return records
+     */
+    Integer selectTotalRecord();
+
+    /**
      * 查询所有文件数据
      *
      * @return file list
