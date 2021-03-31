@@ -15,7 +15,7 @@ public interface FileDao {
     /**
      * 分页查询
      *
-     * @param pageNumber 页数
+     * @param pageNumber 页码
      * @param pageSize 页大小
      * @return file list
      */

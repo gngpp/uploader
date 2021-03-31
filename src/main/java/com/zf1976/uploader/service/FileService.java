@@ -179,17 +179,34 @@ public class FileService {
      */
     public PageInfo<File> selectFilePage(Integer pageNumber, Integer pageSize) {
         final Integer totalRecord = this.fileDao.selectTotalRecord();
-        // 页数
-        int pageCount = (pageNumber - 1) * pageSize;
+        // limit
+        int pageLimit = (pageNumber - 1) * pageSize;
         // 总页数
         int totalPage = (totalRecord + pageSize -1) / pageSize;
-        final Collection<File> fileCollection = this.fileDao.selectPages(pageCount, pageSize);
+        final Collection<File> fileCollection = this.fileDao.selectPages(pageLimit, pageSize);
         final PageInfo<File> pageInfo = new PageInfo<>();
         return pageInfo.setPageSize(pageSize)
                        .setTotalRecord(totalRecord)
                        .setTotalPage(totalPage)
-                       .setPageCount(pageCount)
+                       .setPageCount(pageNumber)
                        .setData(fileCollection);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public Optional<Void> deleteById(Long id) {
+        final File file = this.fileDao.getById(id);
+        if (ObjectUtils.isEmpty(file)) {
+            throw new RuntimeException("file is not exists");
+        }
+        final String filename = file.getName();
+        final String md5 = file.getMd5();
+        final String realFilename = generatedMd5Filename(filename, md5);
+        final java.io.File file1 = createFile(realFilename);
+        this.fileDao.deleteById(id);
+        if (file1.delete()) {
+            return Optional.empty();
+        }
+        throw new RuntimeException("file:" + filename + "delete error");
     }
 
     /**
@@ -227,4 +244,12 @@ public class FileService {
         return md5 + rawFilename.substring(rawFilename.indexOf("."));
     }
 
+    public static java.io.File createFile(String filename) {
+        final String uploadPath = FileUtil.getUploadPath();
+        final java.io.File file = Paths.get(uploadPath, filename).toFile();
+        if (!file.exists() || file.isDirectory()) {
+            throw new RuntimeException("this file : " + filename +" not exists");
+        }
+        return file;
+    }
 }
