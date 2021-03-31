@@ -3,6 +3,7 @@ package com.zf1976.myuploader;
 import com.zf1976.uploader.UploaderApplication;
 import com.zf1976.uploader.dao.FileDao;
 import com.zf1976.uploader.model.File;
+import com.zf1976.uploader.service.FileService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,9 @@ public class MyUploaderApplicationTests {
 
     @Autowired
     private FileDao dao;
+
+    @Autowired
+    private FileService service;
 
     @Test
     public void contextLoads() {

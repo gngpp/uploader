@@ -14,7 +14,7 @@ import java.util.Optional;
  */
 @RestController
 @CrossOrigin
-@RequestMapping
+@RequestMapping("/upload")
 public class UploadController {
 
     private final FileService fileService;
@@ -28,7 +28,7 @@ public class UploadController {
         return ResponseEntity.ok(fileService.uploadFileList(fileList));
     }
 
-    @PostMapping("/file")
+    @PostMapping("/single_file")
     public ResponseEntity<Optional<Void>> upload(String md5, @RequestParam("file") MultipartFile file) throws IOException {
         return ResponseEntity.ok(fileService.uploadFile(md5, file));
     }

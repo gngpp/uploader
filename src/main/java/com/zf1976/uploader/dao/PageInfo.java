@@ -1,5 +1,10 @@
 package com.zf1976.uploader.dao;
 
+import org.springframework.util.CollectionUtils;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
 /**
  * @author ant
  * Create by Ant on 2021/3/30 6:59 PM
@@ -28,7 +33,7 @@ public class PageInfo<T> {
     private Integer pageCount;
 
 
-    private T data;
+    private Collection<T> data;
 
     public Integer getTotalRecord() {
         return totalRecord;
@@ -66,12 +71,12 @@ public class PageInfo<T> {
         return this;
     }
 
-    public T getData() {
+    public Collection<T> getData() {
         return data;
     }
 
-    public PageInfo<T> setData(T data) {
-        this.data = data;
+    public PageInfo<T> setData(Collection<T> data) {
+        this.data = new ArrayList<>(data);
         return this;
     }
 }

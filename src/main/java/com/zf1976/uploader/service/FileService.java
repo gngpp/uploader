@@ -49,8 +49,9 @@ public class FileService {
                     throw new RuntimeException("root directory cannot been null");
                 }
             }
-        } catch (IOException ignored) {
+        } catch (IOException exception) {
             // 初始化失败，停止程序
+            exception.printStackTrace();
             System.exit(-1);
         }
     }
@@ -122,6 +123,12 @@ public class FileService {
         if (ObjectUtils.isEmpty(chunkTotal)) {
             uploadFile(md5, file);
         }
+        // 校验md5
+        if (!ObjectUtils.isEmpty(md5)) {
+            if (!this.checkMd5(md5)) {
+                throw new RuntimeException("this file:" + filename + "is exists");
+            }
+        }
         // 设置文件分块记录
         if (!ChunkRecordUtil.checkRecord(md5)) {
             ChunkRecordUtil.addFileRecord(md5, chunkTotal);
@@ -170,17 +177,19 @@ public class FileService {
      * @param pageSize 页大小
      * @return page info
      */
-    PageInfo<Collection<File>> selectFilePage(Integer pageNumber, Integer pageSize) {
+    public PageInfo<File> selectFilePage(Integer pageNumber, Integer pageSize) {
         final Integer totalRecord = this.fileDao.selectTotalRecord();
         // 页数
-        int page = (pageNumber - 1) * pageSize;
+        int pageCount = (pageNumber - 1) * pageSize;
         // 总页数
-        int pageCount = (totalRecord + pageSize -1) / pageSize;
-        final Collection<File> fileCollection = this.fileDao.selectPages(page, pageSize);
-        final PageInfo<Collection<File>> pageInfo = new PageInfo<>();
-        pageInfo.setPageSize(pageSize)
-                .setData(fileCollection);
-        return pageInfo;
+        int totalPage = (totalRecord + pageSize -1) / pageSize;
+        final Collection<File> fileCollection = this.fileDao.selectPages(pageCount, pageSize);
+        final PageInfo<File> pageInfo = new PageInfo<>();
+        return pageInfo.setPageSize(pageSize)
+                       .setTotalRecord(totalRecord)
+                       .setTotalPage(totalPage)
+                       .setPageCount(pageCount)
+                       .setData(fileCollection);
     }
 
     /**

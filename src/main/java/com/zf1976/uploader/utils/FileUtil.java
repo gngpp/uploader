@@ -20,7 +20,7 @@ public class FileUtil {
     /**
      * 用户目录
      */
-    private static final String ROOT_PATH = System.getProperty("user.home");
+    private static final String ROOT_PATH = "/volumes/Mac-Data";
 
     /**
      * 更好的uuid生成工具

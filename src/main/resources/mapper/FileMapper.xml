@@ -89,7 +89,7 @@
     <select id="selectPages" resultMap="BaseResultMap">
         select id,name,md5,upload_time,size
         from file
-        limit #{pageNumber}
+        limit #{pageNumber}, #{pageSize}
         
     </select>
 
