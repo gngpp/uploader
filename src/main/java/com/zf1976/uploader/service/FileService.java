@@ -107,10 +107,12 @@ public class FileService {
 
     /**
      * 分块上传文件
+     *
+     * @param filename 文件名
      * @param md5 文件md5
      * @param fileSize 文件大小
      * @param chunkTotal 块总数
-     * @param chunkIndex 分块号
+     * @param chunkIndex 块索引
      * @param file 文件
      * @throws IOException exception
      */
