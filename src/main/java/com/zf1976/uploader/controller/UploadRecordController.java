@@ -5,7 +5,6 @@ import com.zf1976.uploader.model.File;
 import com.zf1976.uploader.service.FileService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.yaml.snakeyaml.events.Event;
 
 import java.util.Optional;
 
